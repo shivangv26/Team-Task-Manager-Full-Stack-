@@ -1,173 +1,212 @@
-# TaskForge — Team Task Manager
+# TaskForge 🔥
+### Team Task Manager with Role-Based Access Control
 
-A full-stack team task manager with role-based access control, built with **Express + SQLite + React**.
+A full-stack productivity app for teams to manage projects, assign tasks, and track progress — built with **Express**, **SQLite**, and **React**.
 
----
-
-## Tech Stack
-
-| Layer     | Technology                          |
-|-----------|-------------------------------------|
-| Backend   | Node.js, Express, better-sqlite3    |
-| Frontend  | React 18, React Router v6, Vite     |
-| Auth      | JWT (jsonwebtoken), bcryptjs        |
-| Deploy    | Docker → Railway                    |
+![Node.js](https://img.shields.io/badge/Node.js-20+-339933?style=flat&logo=node.js&logoColor=white)
+![React](https://img.shields.io/badge/React-18-61DAFB?style=flat&logo=react&logoColor=black)
+![SQLite](https://img.shields.io/badge/SQLite-3-003B57?style=flat&logo=sqlite&logoColor=white)
+![JWT](https://img.shields.io/badge/Auth-JWT-orange?style=flat)
+![Railway](https://img.shields.io/badge/Deploy-Railway-0B0D0E?style=flat&logo=railway)
 
 ---
 
-## Features
+## ✨ Features
 
-- **Authentication** — Signup/Login with JWT, 7-day sessions
-- **Role-Based Access** — Global Admin/Member + per-project Admin/Member
-- **Projects** — Create, edit, delete; color-coded; progress tracking
-- **Tasks** — Create, assign, status/priority, due dates, overdue auto-detection
-- **Dashboard** — Live stats, recent activity, project progress bars
-- **User Management** — Admin panel to manage roles and delete users
+- 🔐 **Authentication** — Signup & Login with JWT (7-day sessions)
+- 👥 **Role-Based Access Control** — Global Admin/Member + per-project Admin/Member
+- 📁 **Project Management** — Create color-coded projects, track progress, manage teams
+- ✅ **Task Tracking** — Create, assign, prioritize, and set due dates on tasks
+- 🔥 **Auto Overdue Detection** — Tasks past due date are automatically flagged
+- 📊 **Dashboard** — Live stats, recent activity, per-project progress bars
+- 🛡️ **Admin Panel** — Manage all users, change roles, delete accounts
 
 ---
 
-## Local Development
+## 🛠️ Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Backend | Node.js, Express |
+| Database | SQLite (better-sqlite3) |
+| Auth | JWT, bcryptjs |
+| Frontend | React 18, React Router v6 |
+| Build Tool | Vite |
+| Deployment | Docker → Railway |
+
+---
+
+## 🚀 Getting Started
 
 ### Prerequisites
 - Node.js 18+
+- npm
 
-### 1. Install backend dependencies
+### 1. Clone the repo
+```bash
+git clone https://github.com/YOUR_USERNAME/team-task-manager.git
+cd team-task-manager
+```
+
+### 2. Start the backend
 ```bash
 cd backend
 npm install
+npm run dev
+# Running on http://localhost:5000
 ```
 
-### 2. Install frontend dependencies
+### 3. Start the frontend
 ```bash
 cd frontend
 npm install
-```
-
-### 3. Start the backend (port 5000)
-```bash
-cd backend
 npm run dev
+# Running on http://localhost:5173
 ```
 
-### 4. Start the frontend (port 5173)
-```bash
-cd frontend
-npm run dev
-```
-
-Open http://localhost:5173 — API calls are proxied to localhost:5000.
+Open **http://localhost:5173** and sign up with role **Admin** for full access.
 
 ---
 
-## Environment Variables
+## ⚙️ Environment Variables
 
-Set these in Railway (or a `.env` file locally):
-
-| Variable       | Default                    | Description                     |
-|----------------|----------------------------|---------------------------------|
-| `PORT`         | `5000`                     | Server port                     |
-| `JWT_SECRET`   | `super_secret_dev_key_...` | **Change this in production!**  |
-| `DB_PATH`      | `./taskmanager.db`         | SQLite database file path       |
-| `FRONTEND_URL` | `*`                        | CORS allowed origin             |
-
-> ⚠️ **Always set a strong `JWT_SECRET` in production.**
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `PORT` | `5000` | Server port |
+| `JWT_SECRET` | — | **Required in production.** Sign with `openssl rand -hex 32` |
+| `DB_PATH` | `./taskmanager.db` | SQLite file path |
+| `NODE_ENV` | `development` | Set to `production` on Railway |
 
 ---
 
-## Deploying to Railway
-
-### Option A: Deploy via GitHub (Recommended)
+## 🌐 Deploy to Railway
 
 1. Push this repo to GitHub
-2. Go to [railway.app](https://railway.app) → New Project → Deploy from GitHub
-3. Select your repo — Railway auto-detects the `Dockerfile`
-4. Add environment variables:
-   - `JWT_SECRET` → a long random string (use `openssl rand -hex 32`)
-   - `DB_PATH` → `/data/taskmanager.db` (if using a persistent volume)
-5. (Optional) Add a Railway Volume mounted at `/data` for SQLite persistence
-6. Deploy!
+2. Go to [railway.app](https://railway.app) → **New Project** → **Deploy from GitHub**
+3. Add environment variables in the Railway dashboard:
+   - `JWT_SECRET` → `openssl rand -hex 32`
+   - `DB_PATH` → `/data/taskmanager.db`
+   - `NODE_ENV` → `production`
+4. Add a **Volume** mounted at `/data` for persistent storage
+5. Click **Generate Domain** — your app is live!
 
-### Option B: Railway CLI
-
-```bash
-npm install -g @railway/cli
-railway login
-railway init
-railway up
-```
-
-### Persistent Storage
-
-SQLite data is stored in the container filesystem by default (resets on redeploy). For persistent storage:
-
-1. In Railway: Project → Add Volume → Mount at `/data`
-2. Set env var: `DB_PATH=/data/taskmanager.db`
+Railway auto-detects the `Dockerfile` and builds everything automatically.
 
 ---
 
-## API Reference
+## 📡 API Reference
 
 ### Auth
-| Method | Endpoint         | Auth | Description      |
-|--------|------------------|------|------------------|
-| POST   | /api/auth/signup | —    | Register         |
-| POST   | /api/auth/login  | —    | Login            |
-| GET    | /api/auth/me     | ✓    | Current user     |
-| PUT    | /api/auth/me     | ✓    | Update profile   |
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/auth/signup` | Register |
+| POST | `/api/auth/login` | Login |
+| GET | `/api/auth/me` | Current user |
+| PUT | `/api/auth/me` | Update profile |
 
 ### Projects
-| Method | Endpoint                              | Auth  | Description           |
-|--------|---------------------------------------|-------|-----------------------|
-| GET    | /api/projects                         | ✓     | List my projects      |
-| POST   | /api/projects                         | ✓     | Create project        |
-| GET    | /api/projects/:id                     | ✓ mbr | Get project details   |
-| PUT    | /api/projects/:id                     | admin | Update project        |
-| DELETE | /api/projects/:id                     | admin | Delete project        |
-| POST   | /api/projects/:id/members             | admin | Add member            |
-| DELETE | /api/projects/:id/members/:userId     | admin | Remove member         |
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/projects` | List my projects |
+| POST | `/api/projects` | Create project |
+| GET | `/api/projects/:id` | Project + members + stats |
+| PUT | `/api/projects/:id` | Update (admin) |
+| DELETE | `/api/projects/:id` | Delete (admin) |
+| POST | `/api/projects/:id/members` | Add member |
+| DELETE | `/api/projects/:id/members/:userId` | Remove member |
 
 ### Tasks
-| Method | Endpoint                      | Auth | Description         |
-|--------|-------------------------------|------|---------------------|
-| GET    | /api/tasks                    | ✓    | List tasks (filter) |
-| POST   | /api/tasks                    | ✓    | Create task         |
-| GET    | /api/tasks/dashboard/summary  | ✓    | Dashboard stats     |
-| GET    | /api/tasks/:id                | ✓    | Get task            |
-| PUT    | /api/tasks/:id                | ✓    | Update task         |
-| DELETE | /api/tasks/:id                | ✓    | Delete task         |
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/tasks` | List tasks (filter by status/priority/assignee) |
+| POST | `/api/tasks` | Create task |
+| GET | `/api/tasks/dashboard/summary` | Dashboard stats |
+| PUT | `/api/tasks/:id` | Update task |
+| DELETE | `/api/tasks/:id` | Delete task |
 
-### Users (Admin only)
-| Method | Endpoint             | Auth  | Description       |
-|--------|----------------------|-------|-------------------|
-| GET    | /api/users           | ✓     | List/search users |
-| PUT    | /api/users/:id/role  | admin | Change role       |
-| DELETE | /api/users/:id       | admin | Delete user       |
+### Users *(Admin only)*
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/users` | List / search users |
+| PUT | `/api/users/:id/role` | Change role |
+| DELETE | `/api/users/:id` | Delete user |
 
 ---
 
-## Database Schema
+## 🗄️ Database Schema
 
 ```sql
 users            (id, name, email, password, role, created_at)
 projects         (id, name, description, color, owner_id, created_at)
 project_members  (project_id, user_id, role, joined_at)
-tasks            (id, title, description, project_id, assignee_id, creator_id,
-                  status, priority, due_date, created_at, updated_at)
+tasks            (id, title, description, project_id, assignee_id,
+                  creator_id, status, priority, due_date, created_at, updated_at)
 ```
 
 ---
 
-## Role-Based Access Control
+## 🔐 Role-Based Access Control
 
 ### Global Roles
-- **Admin** — Full access to all projects, tasks, and user management
-- **Member** — Access only to projects they're a member of
+- **Admin** — Full access including user management panel
+- **Member** — Access only to their own projects
 
-### Project Roles  
-- **Project Admin** — Can manage project settings, members, and all tasks
-- **Project Member** — Can create tasks, update status, view all project tasks
+### Project Roles
+- **Project Admin** — Manage project, members, and all tasks
+- **Project Member** — Create tasks and update status
 
-### Rules
-- Project owners always have admin-level access to their project
-- Only project/global admins can add/remove members
-- Task deletion requires: creator, project admin, or global admin
+### Permission Matrix
+
+| Action | Member | Project Member | Project Admin | Global Admin |
+|--------|:------:|:--------------:|:-------------:|:------------:|
+| Create project | ✅ | ✅ | ✅ | ✅ |
+| Edit project | ❌ | ❌ | ✅ | ✅ |
+| Add/remove members | ❌ | ❌ | ✅ | ✅ |
+| Create tasks | ❌ | ✅ | ✅ | ✅ |
+| Edit all task fields | ❌ | ❌ | ✅ | ✅ |
+| Update task status | ❌ | ✅ | ✅ | ✅ |
+| Delete tasks | ❌ | Own only | ✅ | ✅ |
+| User management | ❌ | ❌ | ❌ | ✅ |
+
+---
+
+## 📁 Project Structure
+
+```
+team-task-manager/
+├── backend/
+│   ├── server.js
+│   ├── db.js
+│   ├── middleware/auth.js
+│   └── routes/
+│       ├── auth.js
+│       ├── projects.js
+│       ├── tasks.js
+│       └── users.js
+├── frontend/src/
+│   ├── api.js
+│   ├── App.jsx
+│   ├── styles.css
+│   ├── context/AuthContext.jsx
+│   ├── components/
+│   │   ├── Sidebar.jsx
+│   │   ├── TaskCard.jsx
+│   │   └── TaskModal.jsx
+│   └── pages/
+│       ├── Dashboard.jsx
+│       ├── Projects.jsx
+│       ├── ProjectDetail.jsx
+│       ├── Tasks.jsx
+│       ├── Users.jsx
+│       ├── Login.jsx
+│       └── Signup.jsx
+├── Dockerfile
+├── railway.json
+└── README.md
+```
+
+---
+
+## 📄 License
+
+MIT
