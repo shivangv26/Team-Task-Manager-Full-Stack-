@@ -6,22 +6,23 @@ RUN npm install
 COPY frontend/ ./
 RUN npm run build
 
-# ─── Backend ─────────────────────────────────────────
 FROM node:20-alpine
 
 WORKDIR /app
 
-# Install build tools for better-sqlite3
 RUN apk add --no-cache python3 make g++
 
 COPY backend/package*.json ./
 RUN npm install --production
 
 COPY backend/ ./
-COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
 
-EXPOSE 5000
+# Copy built frontend into backend/dist
+COPY --from=frontend-builder /app/frontend/dist ./dist
+
+EXPOSE 8080
 
 ENV NODE_ENV=production
+ENV PORT=8080
 
 CMD ["node", "server.js"]
